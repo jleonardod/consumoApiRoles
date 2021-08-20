@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Menu</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <p>Bienvenido</p>
+  </body>
+</html>
+<script>
+  $(document).ready(function(){
+    rol = leerCookie("rol");
+    ulr = "http://127.0.0.1:8000/api/rolesHasPermiso/"+rol
+
+    $.ajax({
+      url: url,
+      method: "GET",
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function(data){
+        console.log(data);
+      },
+      error: function(){
+        window.alert("Problema al cargar los parametros");
+      }
+    })
+  });
+
+  function leerCookie(nombre){
+    
+    nombreEQ = nombre + "=";
+    ca = document.cookie.split(";");
+
+    for(i = 0; i < ca.length; i++){
+
+      c = ca[i];
+      while(c.charAt(0)==' ') c = c.substring(1, c.length);
+      if(c.indexOf(nombreEQ) == 0){
+        return c.substring(nombreEQ.length, c.length);
+      }
+    }
+  }
+</script>
