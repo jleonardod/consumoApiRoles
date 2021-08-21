@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Usuarios</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <a href="nuevoUsuario.html">Nuevo Usuario</a>
+    </br>
+    <table id="tabla" name="tabla" border="1">
+      <tr>
+        <th>id</th>
+        <th>nombre</th>
+        <th>apellido</th>
+        <th>email</th>
+        <th>telefono</th>
+        <th>Eliminar</th>
+      </tr>
+    </table>
+  </body>
+</html>
+<script>
+  $(document).ready(function(){
+    url = "http://127.0.0.1:8000/api/usuarios";
+    $.ajax({
+      url: url,
+      method: "GET",
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function(data){
+        for(i = 0; i<data.length; i++){
+          cont = i+1;
+          usuario = data[i];
+          id = usuario["id"];
+          nombre = usuario["nombre"];
+          apellido = usuario["apellido"];
+          email = usuario["email"];
+          telefono = usuario["telefono"];
+          $('#tabla').append(`<tr><td>`+cont+`</td> <td>`+nombre+`</td> <td>`+apellido+`</td> <td>`+email+`</td> <td>`+telefono+`</td> <td><button onClick="Eliminar(`+id+`)">Eliminar</button></td></tr>`)
+        }
+      }
+    })
+  });
+</script>

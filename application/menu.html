@@ -8,12 +8,17 @@
   </head>
   <body>
     <p>Bienvenido</p>
+    <div id="menu" name="menu">
+      <div id="usuarios" name="usuarios"></div>
+      </br>
+      <div id="productos" name="productos"></div>
+    </div>
   </body>
 </html>
 <script>
   $(document).ready(function(){
     rol = leerCookie("rol");
-    ulr = "http://127.0.0.1:8000/api/rolesHasPermiso/"+rol
+    url = "http://127.0.0.1:8000/api/rolesHasPermiso/a/"+rol
 
     $.ajax({
       url: url,
@@ -22,7 +27,26 @@
       cache: false,
       processData: false,
       success: function(data){
-        console.log(data);
+        resultado = JSON.parse(data);
+        permisos = [];
+        for(i = 0; i<resultado.length; i++){
+          elemento = resultado[i];
+          permiso = elemento["idPermiso"];
+          
+          permisos.push(permiso);
+        }
+
+        usuarios = permisos.indexOf("1");
+        productos = permisos.indexOf("2");
+
+        if(usuarios != -1){
+          $('#usuarios').html(`<a href="usuarios.html">usuarios</a> </br>`)
+        }
+
+        if(productos != -1){
+          $('#productos').html(`<a href="productos.html">productos</a> </br>`)
+        }
+        
       },
       error: function(){
         window.alert("Problema al cargar los parametros");

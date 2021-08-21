@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Nuevo Usuario</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <form name="form1" id="form1" method="POST">
+      <label>Nombre:</label>
+      <input name="nombre" id="nombre" type="text" />
+      </br>
+      <label>Apellido:</label>
+      <input name="apellido" id="apellido" type="text" />
+      </br>
+      <label>email:</label>
+      <input name="email" id="email" type="text" />
+      </br>
+      <label>Telefono:</label>
+      <input name="telefono" id="telefono" type="text" />
+      </br>
+      <button type="button" name="guardarUsuario" id="guardarUsuario">Guardar</button>
+    </form>
+  </body>
+</html>
+<script>
+  $(document).ready(function(){
+    $('#guardarUsuario').click(function() {
+      nombre = document.getElementById("nombre")
+      apellido = document.getElementById("apellido")
+      email = document.getElementById("email")
+      telefono = document.getElementById("telefono")
+      
+      url = "http://127.0.0.1:8000/api/usuarios";
+
+      $.ajax({
+        url: url,
+        method: "POST",
+        contentType: "application/json",
+        cache: false,
+        processData: false,
+        data: JSON.stringify({"nombre":nombre,"apellido":apellido,"email":email,"telefono":telefono}),
+        success: function(data){
+          console.log(data);
+        }
+      })
+    })
+  });
+</script>
