@@ -13,13 +13,15 @@
       </br>
       <div id="productos" name="productos"></div>
     </div>
+    </br>
+    <a href="../index.html">Cerrar Sesion</a>
   </body>
 </html>
 <script>
   $(document).ready(function(){
     rol = leerCookie("rol");
     url = "http://127.0.0.1:8000/api/rolesHasPermiso/a/"+rol
-
+    console.log(url);
     $.ajax({
       url: url,
       method: "GET",

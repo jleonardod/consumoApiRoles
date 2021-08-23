@@ -17,10 +17,31 @@
         <th>email</th>
         <th>telefono</th>
         <th>Eliminar</th>
+        <th>Editar</th>
       </tr>
     </table>
+    </br>
+    <a href="menu.html">Volver</a>
   </body>
 </html>
+<script>
+  function Eliminar(id){
+    var settings = {
+      "url": "http://127.0.0.1:8000/api/usuarios/"+id+"/delete",
+      "method": "DELETE",
+      "timeout": 0,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "data": JSON.stringify({"idUsuario": id}),
+    };
+
+    $.ajax(settings).done(function (response){
+      console.log(response);
+      alert("Usuario Eliminado");
+    });
+  }
+</script>
 <script>
   $(document).ready(function(){
     url = "http://127.0.0.1:8000/api/usuarios";
@@ -39,7 +60,7 @@
           apellido = usuario["apellido"];
           email = usuario["email"];
           telefono = usuario["telefono"];
-          $('#tabla').append(`<tr><td>`+cont+`</td> <td>`+nombre+`</td> <td>`+apellido+`</td> <td>`+email+`</td> <td>`+telefono+`</td> <td><button onClick="Eliminar(`+id+`)">Eliminar</button></td></tr>`)
+          $('#tabla').append(`<tr><td>`+cont+`</td> <td>`+nombre+`</td> <td>`+apellido+`</td> <td>`+email+`</td> <td>`+telefono+`</td> <td><button onClick="Eliminar(`+id+`)">Eliminar</button></td><td><a href="editUsuario.html?id=`+id+`">Editar</a></td></tr>`)
         }
       }
     })

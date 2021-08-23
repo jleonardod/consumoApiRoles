@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Usuario</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <form name="form1" id="form1" method="POST">
+      <label>Nombre:</label>
+      <input name="nombre" id="nombre" type="text" />
+      </br>
+      <label>Apellido:</label>
+      <input name="apellido" id="apellido" type="text" />
+      </br>
+      <label>email:</label>
+      <input name="email" id="email" type="text" />
+      </br>
+      <label>Telefono:</label>
+      <input name="telefono" id="telefono" type="text" />
+      <input name="idUsuario" id="idUsuario" type="hidden" />
+      </br>
+      <button type="button" name="actualizarUsuario" id="actualizarUsuario">Actualizar</button>
+      <a href="usuarios.html">Volver</a>
+    </form>
+  </body>
+</html>
+<script>
+  $(document).ready(function(){
+    loc = document.location.href;
+
+    if(loc.indexOf('?')>0){
+      // cogemos la parte de la url que hay despues del interrogante
+      var getString = loc.split('?')[1];
+      // obtenemos un array con cada clave=valor
+      var GET = getString.split('&');
+      var get = {};
+      // recorremos todo el array de valores
+      for(var i = 0, l = GET.length; i < l; i++){
+        var tmp = GET[i].split('=');
+        get[tmp[0]] = unescape(decodeURI(tmp[1]));
+      }
+    }
+
+    id = get["id"];
+
+    $.ajax({
+      url: "http://127.0.0.1:8000/api/usuarios/consultarUsuario/"+id,
+      method: "GET",
+      contentType: false,
+      cache: false,
+      processData: false, 
+      success: function(data){
+        resultado = JSON.parse(data);
+        usuario = resultado[0];
+        
+        id = usuario["id"];
+        nombre = usuario["nombre"];
+        apellido = usuario["apellido"];
+        email = usuario["email"];
+        telefono = usuario["telefono"];
+
+        document.getElementById("nombre").value = nombre;
+        document.getElementById("apellido").value = apellido;
+        document.getElementById("email").value = email;
+        document.getElementById("telefono").value = telefono;
+        document.getElementById("idUsuario").value = id;
+        
+      },
+      error: function(data){
+        console.log(data);
+      }
+    })
+
+    $('#actualizarUsuario').click(function(){
+
+      nombre = document.getElementById("nombre").value;
+      apellido = document.getElementById("apellido").value;
+      email = document.getElementById("email").value;
+      telefono = document.getElementById("telefono").value;
+
+      var settings = {
+        "url": "http://127.0.0.1:8000/api/usuarios/"+id+"/actualiza",
+        "method": "PUT",
+        "timeout": 0,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "data": JSON.stringify({"nombre":nombre,"apellido":apellido,"email":email,"telefono":telefono}),
+      };
+
+      $.ajax(settings).done(function (response){
+        console.log(response)
+      });
+    })
+  });
+</script>

@@ -22,29 +22,77 @@
       </br>
       <button type="button" name="guardarUsuario" id="guardarUsuario">Guardar</button>
     </form>
+    </br>
+    <form name="form2" id="form2" method="POST">
+      <button type="button" name="guardarPerfil" id="guardarPerfil" style="display: none;">Guardar</button>
+    </form>
+    </body>
+    </br>
+    <a href="usuarios.html">Volver</a>
   </body>
 </html>
 <script>
   $(document).ready(function(){
     $('#guardarUsuario').click(function() {
-      nombre = document.getElementById("nombre")
-      apellido = document.getElementById("apellido")
-      email = document.getElementById("email")
-      telefono = document.getElementById("telefono")
+      nombre = document.getElementById('nombre').value;
+      apellido = document.getElementById('apellido').value;
+      email = document.getElementById('email').value;
+      telefono = document.getElementById('telefono').value;
       
-      url = "http://127.0.0.1:8000/api/usuarios";
+      var settings = {
+        "url": "http://127.0.0.1:8000/api/usuarios/a/create",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "data": JSON.stringify({"nombre":nombre,"apellido":apellido,"email":email,"telefono":telefono}),
+      };
 
-      $.ajax({
-        url: url,
-        method: "POST",
-        contentType: "application/json",
-        cache: false,
-        processData: false,
-        data: JSON.stringify({"nombre":nombre,"apellido":apellido,"email":email,"telefono":telefono}),
-        success: function(data){
-          console.log(data);
-        }
-      })
+      $.ajax(settings).done(function (response) {
+        alert("Usuario guardado");
+
+        id=response["id"];
+
+        $('#form2').append(`<label>Nombre Usuario: </label>
+            <input type="text" name="nombreUsuario" id="nombreUsuario">
+            </br>
+            <label>Perfil:</label>
+            <select name="perfil" id="perfil">
+              <option value="0">Seleccione...</option>
+              <option value="1">Adiministrador</option>
+              <option value="2">Empleado</option>
+            </select>
+            </br>
+            <label>Password: </label>
+            <input type="password" name="password" id="password">
+            <input type="hidden" name="idUsuario" id="idUsuario" value="`+id+`"
+            </br>
+          `);
+
+        document.getElementById('guardarPerfil').style.display = "block";
+      });
+    })
+
+    $('#guardarPerfil').click(function(){
+      idUsuario = document.getElementById("idUsuario").value;
+      nombreUsuario = document.getElementById("nombreUsuario").value;
+      idRol = document.getElementById("perfil").value;
+      password = document.getElementById("password").value;
+
+      var settings = {
+        "url": "http://127.0.0.1:8000/api/usuariosHasRol/a/create",
+        "method": "POST",
+        "timeout": 0,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "data": JSON.stringify({"idUsuario":idUsuario,"idRol":idRol,"nombreUsuario":nombreUsuario,"password":password,"estado":"1"}),
+      };
+
+      $.ajax(settings).done(function (response) {
+        alert("Rol asignado");
+      });
     })
   });
 </script>
