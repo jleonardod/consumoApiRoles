@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Productos</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <a href="nuevoProducto.html">Nuevo Producto</a>
+    </br>
+    <table id="tabla" name="tabla" border="1">
+      <tr>
+        <th>id</th>
+        <th>nombre</th>
+        <th>valor</th>
+        <th>descripcion</th>
+        <th>Eliminar</th>
+        <th>Editar</th>
+      </tr>
+    </table>
+    </br>
+    <a href="menu.html">Volver</a>
+  </body>
+</html>
+<script>
+  function Eliminar(id){
+    var settings = {
+      "url": "http://127.0.0.1:8000/api/productos/"+id+"/delete",
+      "method": "DELETE",
+      "timeout": 0,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "data": JSON.stringify({"idProducto": id}),
+    };
+
+    $.ajax(settings).done(function (response){
+      console.log(response);
+      alert("Producto Eliminado");
+    });
+  }
+</script>
+<script>
+  $(document).ready(function(){
+    url = "http://127.0.0.1:8000/api/productos";
+    $.ajax({
+      url: url,
+      method: "GET",
+      contentType: false,
+      cache: false,
+      processData: false,
+      success: function(data){
+        for(i = 0; i<data.length; i++){
+          cont = i+1;
+          producto = data[i];
+          id = producto["id"];
+          nombre = producto["nombre"];
+          valor = producto["valor"];
+          descripcion = producto["descripcion"];
+          $('#tabla').append(`<tr><td>`+cont+`</td> <td>`+nombre+`</td> <td>`+valor+`</td> <td>`+descripcion+`</td> <td><button onClick="Eliminar(`+id+`)">Eliminar</button></td><td><a href="editProducto.html?id=`+id+`">Editar</a></td></tr>`)
+        }
+      }
+    })
+  });
+</script>

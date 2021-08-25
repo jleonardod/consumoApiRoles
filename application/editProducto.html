@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <title>Producto</title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <form name="form1" id="form1" method="POST">
+      <label>Nombre:</label>
+      <input name="nombre" id="nombre" type="text" />
+      </br>
+      <label>Valor:</label>
+      <input name="valor" id="valor" type="text" />
+      </br>
+      <label>Descripcion:</label>
+      <input name="descripcion" id="descripcion" type="text" />
+      <input name="idProducto" id="idProducto" type="hidden" />
+      </br>
+      <button type="button" name="actualizarProducto" id="actualizarProducto">Actualizar</button>
+      <a href="productos.html">Volver</a>
+    </form>
+  </body>
+</html>
+<script>
+  $(document).ready(function(){
+    loc = document.location.href;
+
+    if(loc.indexOf('?')>0){
+      // cogemos la parte de la url que hay despues del interrogante
+      var getString = loc.split('?')[1];
+      // obtenemos un array con cada clave=valor
+      var GET = getString.split('&');
+      var get = {};
+      // recorremos todo el array de valores
+      for(var i = 0, l = GET.length; i < l; i++){
+        var tmp = GET[i].split('=');
+        get[tmp[0]] = unescape(decodeURI(tmp[1]));
+      }
+    }
+
+    id = get["id"];
+
+    $.ajax({
+      url: "http://127.0.0.1:8000/api/productos/consultarProducto/"+id,
+      method: "GET",
+      contentType: false,
+      cache: false,
+      processData: false, 
+      success: function(data){
+        resultado = JSON.parse(data);
+        producto = resultado[0];
+        
+        id = producto["id"];
+        nombre = producto["nombre"];
+        valor = producto["valor"];
+        descripcion = producto["descripcion"];
+
+        document.getElementById("nombre").value = nombre;
+        document.getElementById("valor").value = valor;
+        document.getElementById("descripcion").value = descripcion;
+        document.getElementById("idProducto").value = id;
+        
+      },
+      error: function(data){
+        console.log(data);
+      }
+    })
+
+    $('#actualizarProducto').click(function(){
+
+      nombre = document.getElementById("nombre").value;
+      valor = document.getElementById("valor").value;
+      descripcion = document.getElementById("descripcion").value;
+
+      var settings = {
+        "url": "http://127.0.0.1:8000/api/productos/"+id+"/actualiza",
+        "method": "PUT",
+        "timeout": 0,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "data": JSON.stringify({"nombre":nombre,"valor":valor,"descripcion":descripcion}),
+      };
+
+      $.ajax(settings).done(function (response){
+        console.log(response)
+      });
+    })
+  });
+</script>
